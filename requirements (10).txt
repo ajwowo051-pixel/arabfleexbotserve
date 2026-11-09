@@ -1,0 +1,9 @@
+pyTelegramBotAPI
+requests
+requests-toolbelt
+boto3
+botocore
+yt-dlp
+psutil
+playwright
+gradio
