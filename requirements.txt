@@ -6,4 +6,4 @@ botocore
 yt-dlp
 psutil
 playwright
-gradio
+Pillow
