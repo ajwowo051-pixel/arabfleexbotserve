@@ -1221,8 +1221,12 @@ def run_ffmpeg_with_progress(cmd, duration, task_id, bot_instance, chat_id, mess
     if task_id in active_tasks:
         active_tasks[task_id]['process'] = process
     last_update = time.time()
+    tail = []
 
     for line in iter(process.stdout.readline, ''):
+        tail.append(line.rstrip())
+        tail = tail[-8:]
+
         if task_id in active_tasks and active_tasks.get(task_id, {}).get("cancel"):
             process.terminate()
             raise Exception("🛑 تم إلغاء العملية.")
@@ -1248,6 +1252,10 @@ def run_ffmpeg_with_progress(cmd, duration, task_id, bot_instance, chat_id, mess
                 last_update = time.time()
 
     process.wait()
+    if process.returncode != 0:
+        err = " | ".join(l for l in tail if l.strip())[-600:]
+        print(f"FFMPEG ERROR: {err}")
+        raise Exception(f"FFmpeg: {err}")
     return process.returncode
 
 def remove_solid_background(img, tol=18):
