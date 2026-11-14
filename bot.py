@@ -1253,9 +1253,14 @@ def run_ffmpeg_with_progress(cmd, duration, task_id, bot_instance, chat_id, mess
 
     process.wait()
     if process.returncode != 0:
-        err = " | ".join(l for l in tail if l.strip())[-600:]
-        print(f"FFMPEG ERROR: {err}")
-        raise Exception(f"FFmpeg: {err}")
+        useful = [l for l in tail if l.strip() and not l.strip().startswith("frame=")]
+        err = " | ".join(useful)[-500:] or "لا توجد رسالة من FFmpeg"
+        rc = process.returncode
+        hint = ""
+        if rc in (-9, 137):
+            hint = " (العملية اتقتلت: غالباً الرام خلصت على السيرفر)"
+        print(f"FFMPEG ERROR rc={rc}: {err}")
+        raise Exception(f"FFmpeg rc={rc}{hint}: {err}")
     return process.returncode
 
 def remove_solid_background(img, tol=18):
@@ -1451,7 +1456,7 @@ def build_encode_cmd(input_file, scale_str, out_name, add_watermark=False, logo_
     if filters:
         cmd.extend(["-filter_complex", ";".join(filters)])
         cmd.extend(["-map", f"[{current_v}]", "-map", "0:a?"])
-        cmd.extend(["-c:v", "libx264", "-crf", "22", "-preset", "fast", "-pix_fmt", "yuv420p", "-c:a", "copy", out_name])
+        cmd.extend(["-c:v", "libx264", "-crf", "22", "-preset", "veryfast", "-threads", "2", "-pix_fmt", "yuv420p", "-c:a", "copy", out_name])
     else:
         cmd.extend(["-c:v", "copy", "-c:a", "copy", out_name])
 
