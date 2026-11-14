@@ -37,7 +37,7 @@ except ImportError:
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 VERSION = "19.9.5 (OK.ru Embed Parse)"
-TOKEN = "8888154300:AAEWxJEh96khzktPxJ4pxvvElmbU0bdAYJQ"
+TOKEN = "8888154300:AAGP7NL6BLcn8rSRlzNec4bWbnqKCL3vb2k"
 ADMIN_CHAT_ID = 1013251619
 CONFIG_FILE = "api_keys_config.json"
 
